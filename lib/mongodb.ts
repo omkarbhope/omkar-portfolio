@@ -1,6 +1,16 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, MongoClientOptions } from 'mongodb';
 
-const options = {};
+const options: MongoClientOptions = {
+  // TLS/SSL settings for serverless environments (Vercel)
+  tls: true,
+  tlsAllowInvalidCertificates: false,
+  // Connection pool settings for serverless
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  maxIdleTimeMS: 10000,
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
