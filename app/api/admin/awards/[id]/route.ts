@@ -14,7 +14,7 @@ export async function GET(
     const db = await getDatabase();
     const { ObjectId } = await import('mongodb');
 
-    const award = await db.collection<Award>('awards').findOne({
+    const award = await db.collection('awards').findOne({
       _id: new ObjectId(id),
     });
 
@@ -48,7 +48,7 @@ export async function PUT(
       updatedAt: new Date(),
     };
 
-    await db.collection<Award>('awards').updateOne(
+    await db.collection('awards').updateOne(
       { _id: new ObjectId(id) },
       { $set: updateData }
     );
@@ -82,7 +82,7 @@ export async function DELETE(
     const db = await getDatabase();
     const { ObjectId } = await import('mongodb');
 
-    await db.collection<Award>('awards').deleteOne({ _id: new ObjectId(id) });
+    await db.collection('awards').deleteOne({ _id: new ObjectId(id) });
 
     // Delete associated embeddings
     await db.collection('embeddings').deleteMany({

@@ -14,7 +14,7 @@ export async function GET(
     const db = await getDatabase();
     const { ObjectId } = await import('mongodb');
 
-    const certification = await db.collection<LicenseCertification>('licensesCertifications').findOne({
+    const certification = await db.collection('licensesCertifications').findOne({
       _id: new ObjectId(id),
     });
 
@@ -49,7 +49,7 @@ export async function PUT(
       updatedAt: new Date(),
     };
 
-    await db.collection<LicenseCertification>('licensesCertifications').updateOne(
+    await db.collection('licensesCertifications').updateOne(
       { _id: new ObjectId(id) },
       { $set: updateData }
     );
@@ -83,7 +83,7 @@ export async function DELETE(
     const db = await getDatabase();
     const { ObjectId } = await import('mongodb');
 
-    await db.collection<LicenseCertification>('licensesCertifications').deleteOne({ _id: new ObjectId(id) });
+    await db.collection('licensesCertifications').deleteOne({ _id: new ObjectId(id) });
 
     // Delete associated embeddings
     await db.collection('embeddings').deleteMany({

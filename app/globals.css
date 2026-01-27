@@ -1,54 +1,68 @@
 @import "tailwindcss";
 
-/* Cyberpunk Theme System - Tech-Forward Aesthetic */
+/* macOS-Inspired Theme System - Clean & Elegant */
 
 :root {
-  /* Light Mode Colors */
-  --background: #ffffff;
-  --foreground: #000000;
-  --background-secondary: #fafafa;
-  --border: #e5e5e5;
-  --border-hover: #d4d4d4;
+  /* Light Mode Colors - Soft, Apple-inspired */
+  --background: #f5f5f7;
+  --background-alt: #ffffff;
+  --foreground: #1d1d1f;
+  --background-secondary: #ffffff;
+  --border: #d2d2d7;
+  --border-hover: #86868b;
   
-  /* Primary Colors - Cyan for AI/ML innovation */
-  --primary: #00D9FF;
-  --primary-hover: #00b8d9;
-  --primary-glow: rgba(0, 217, 255, 0.5);
+  /* Primary Colors - Refined Cyan */
+  --primary: #0071e3;
+  --primary-hover: #0077ed;
+  --primary-glow: rgba(0, 113, 227, 0.4);
+  --primary-soft: rgba(0, 113, 227, 0.1);
   
-  /* Secondary - Purple for infrastructure/tech depth */
-  --accent: #A855F7;
-  --accent-hover: #9333EA;
-  --accent-glow: rgba(168, 85, 247, 0.5);
+  /* Secondary - Elegant Purple */
+  --accent: #bf5af2;
+  --accent-hover: #9d4edd;
+  --accent-glow: rgba(191, 90, 242, 0.4);
+  --accent-soft: rgba(191, 90, 242, 0.1);
   
-  /* Tertiary - Neon Green for automation/efficiency */
-  --neon-green: #00FF88;
-  --neon-green-glow: rgba(0, 255, 136, 0.5);
+  /* Tertiary - Fresh Green */
+  --neon-green: #30d158;
+  --neon-green-glow: rgba(48, 209, 88, 0.4);
   
-  /* Text Colors */
-  --text-primary: #000000;
-  --text-secondary: #666666;
-  --text-tertiary: #999999;
+  /* Text Colors - Better contrast for light mode */
+  --text-primary: #1d1d1f;
+  --text-secondary: #424245;
+  --text-tertiary: #6e6e73;
   
   /* Status Colors */
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
+  --success: #34c759;
+  --error: #ff3b30;
+  --warning: #ff9500;
   
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  /* Enhanced Glassmorphism - Light Mode */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-neon: 0 0 20px var(--primary-glow);
-  --shadow-neon-accent: 0 0 20px var(--accent-glow);
+  /* Soft Shadows for Light Mode */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-neon: 0 4px 20px var(--primary-glow);
+  --shadow-neon-accent: 0 4px 20px var(--accent-glow);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   
   /* Animation Durations */
   --duration-fast: 150ms;
-  --duration-normal: 200ms;
-  --duration-slow: 300ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  
+  /* Border Radius - macOS style */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -59,28 +73,47 @@
 }
 
 [data-theme="dark"] {
-  /* Dark Mode Colors - Cyberpunk Aesthetic */
-  --background: #0A0A0A;
-  --foreground: #ffffff;
-  --background-secondary: #111111;
-  --border: #1f1f1f;
-  --border-hover: #333333;
+  /* Dark Mode Colors - Modern Dark Aesthetic */
+  --background: #000000;
+  --background-alt: #0a0a0a;
+  --foreground: #f5f5f7;
+  --background-secondary: #1c1c1e;
+  --border: #2c2c2e;
+  --border-hover: #3a3a3c;
+  
+  /* Vibrant colors for dark mode */
+  --primary: #0a84ff;
+  --primary-hover: #409cff;
+  --primary-glow: rgba(10, 132, 255, 0.5);
+  --primary-soft: rgba(10, 132, 255, 0.15);
+  
+  --accent: #bf5af2;
+  --accent-hover: #da8fff;
+  --accent-glow: rgba(191, 90, 242, 0.5);
+  --accent-soft: rgba(191, 90, 242, 0.15);
+  
+  --neon-green: #30d158;
+  --neon-green-glow: rgba(48, 209, 88, 0.5);
   
   /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #a3a3a3;
-  --text-tertiary: #737373;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #6e6e73;
   
-  /* Glassmorphism */
-  --glass-bg: rgba(10, 10, 10, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Enhanced Glassmorphism - Dark Mode */
+  --glass-bg: rgba(28, 28, 30, 0.72);
+  --glass-bg-strong: rgba(28, 28, 30, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   
-  /* Shadows (neon effects more prominent in dark mode) */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
-  --shadow-neon: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow);
-  --shadow-neon-accent: 0 0 30px var(--accent-glow), 0 0 60px var(--accent-glow);
+  /* Shadows with glow effects */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.7);
+  --shadow-neon: 0 0 30px var(--primary-glow), 0 0 60px rgba(10, 132, 255, 0.3);
+  --shadow-neon-accent: 0 0 30px var(--accent-glow), 0 0 60px rgba(191, 90, 242, 0.3);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 @theme inline {
@@ -112,22 +145,32 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
-/* Grid Background Pattern */
-[data-theme="dark"] body::before {
+/* Light mode subtle gradient background */
+body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+  background: 
+    radial-gradient(ellipse at top, rgba(0, 113, 227, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(191, 90, 242, 0.05) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
+}
+
+/* Dark mode grid pattern */
+[data-theme="dark"] body::before {
+  background: 
+    linear-gradient(rgba(10, 132, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 132, 255, 0.02) 1px, transparent 1px),
+    radial-gradient(ellipse at top, rgba(10, 132, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(191, 90, 242, 0.08) 0%, transparent 50%);
+  background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%;
 }
 
 /* Neon Text Glow Effect */
@@ -153,12 +196,90 @@ body {
   background-clip: text;
 }
 
-/* Glassmorphism Card */
+/* Glassmorphism Card - macOS Style */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: var(--radius-lg);
+}
+
+.glass-card-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: var(--radius-xl);
+}
+
+/* macOS-style frosted glass dock */
+.glass-dock {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-2xl);
+}
+
+[data-theme="dark"] .glass-dock {
+  background: linear-gradient(
+    135deg,
+    rgba(60, 60, 67, 0.4) 0%,
+    rgba(40, 40, 45, 0.3) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* macOS Dock - Accurate Apple-style */
+.macos-dock {
+  background: rgba(243, 243, 248, 0.72);
+  backdrop-filter: blur(50px) saturate(180%);
+  -webkit-backdrop-filter: blur(50px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 0 0 0.5px rgba(0, 0, 0, 0.1),
+    0 10px 40px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .macos-dock {
+  background: rgba(40, 40, 45, 0.65);
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 0 0 0.5px rgba(0, 0, 0, 0.3),
+    0 10px 40px rgba(0, 0, 0, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Soft card for light mode */
+.soft-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.soft-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
 }
 
 /* Neon Border Effect */

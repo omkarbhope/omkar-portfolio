@@ -5,29 +5,132 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, Menu, X, Sparkles } from 'lucide-react';
+import { 
+  Moon, Sun, Menu, X, Home, FileText, Rocket, Briefcase, 
+  GraduationCap, Zap, Award, Trophy, Mail, MessageSquare 
+} from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/resume', label: 'Resume' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/experience', label: 'Experience' },
-  { href: '/education', label: 'Education' },
-  { href: '/skills', label: 'Skills' },
-  { href: '/certifications', label: 'Certifications' },
-  { href: '/awards', label: 'Awards' },
-  { href: '/contact', label: 'Contact' },
-  { href: '/chat', label: 'Chat' },
+  { href: '/', label: 'Home', icon: Home, color: 'from-blue-400 to-blue-600' },
+  { href: '/resume', label: 'Resume', icon: FileText, color: 'from-orange-400 to-red-500' },
+  { href: '/projects', label: 'Projects', icon: Rocket, color: 'from-purple-400 to-purple-600' },
+  { href: '/experience', label: 'Experience', icon: Briefcase, color: 'from-amber-400 to-orange-500' },
+  { href: '/education', label: 'Education', icon: GraduationCap, color: 'from-green-400 to-emerald-600' },
+  { href: '/skills', label: 'Skills', icon: Zap, color: 'from-yellow-400 to-amber-500' },
+  { href: '/certifications', label: 'Certifications', icon: Award, color: 'from-pink-400 to-rose-500' },
+  { href: '/awards', label: 'Awards', icon: Trophy, color: 'from-cyan-400 to-teal-500' },
+  { href: '/contact', label: 'Contact', icon: Mail, color: 'from-indigo-400 to-blue-500' },
+  { href: '/chat', label: 'Chat', icon: MessageSquare, color: 'from-violet-400 to-purple-500' },
 ];
+
+// macOS-style Dock item with app icon appearance
+function DockItem({ 
+  item, 
+  isActive, 
+  hoveredIndex, 
+  index, 
+  setHoveredIndex,
+}: { 
+  item: typeof navItems[0];
+  isActive: boolean;
+  hoveredIndex: number | null;
+  index: number;
+  setHoveredIndex: (index: number | null) => void;
+}) {
+  const Icon = item.icon;
+  
+  // Calculate scale based on distance from hovered item (macOS magnification)
+  let scale = 1;
+  let translateY = 0;
+  if (hoveredIndex !== null) {
+    const distance = Math.abs(hoveredIndex - index);
+    if (distance === 0) {
+      scale = 1.6;
+      translateY = -12;
+    } else if (distance === 1) {
+      scale = 1.3;
+      translateY = -6;
+    } else if (distance === 2) {
+      scale = 1.1;
+      translateY = -2;
+    }
+  }
+
+  return (
+    <Link
+      href={item.href}
+      onMouseEnter={() => setHoveredIndex(index)}
+      onMouseLeave={() => setHoveredIndex(null)}
+      className="relative flex flex-col items-center"
+    >
+      <motion.div
+        className="relative"
+        animate={{ 
+          scale,
+          y: translateY,
+        }}
+        transition={{ 
+          type: 'spring', 
+          stiffness: 300, 
+          damping: 20,
+          mass: 0.8,
+        }}
+        style={{ originY: 1 }}
+      >
+        {/* App Icon - macOS style rounded square */}
+        <div 
+          className={`
+            relative w-12 h-12 rounded-[12px] 
+            bg-gradient-to-br ${item.color}
+            shadow-lg shadow-black/20
+            flex items-center justify-center
+            overflow-hidden
+          `}
+        >
+          {/* Gloss effect */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-[12px]" />
+          
+          <Icon className="w-6 h-6 text-white relative z-10 drop-shadow-md" strokeWidth={2.5} />
+        </div>
+
+        {/* Tooltip - appears above on hover */}
+        <AnimatePresence>
+          {hoveredIndex === index && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 5 }}
+              transition={{ duration: 0.15 }}
+              className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-md bg-gray-800/95 text-white text-xs font-medium whitespace-nowrap shadow-lg"
+            >
+              {item.label}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-gray-800/95" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      
+      {/* Active indicator dot - below icon */}
+      <motion.div
+        className="mt-1 w-1 h-1 rounded-full bg-[var(--text-tertiary)]"
+        animate={{ 
+          opacity: isActive ? 1 : 0,
+          scale: isActive ? 1 : 0,
+        }}
+        transition={{ duration: 0.2 }}
+      />
+    </Link>
+  );
+}
 
 export default function Navigation() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -36,264 +139,247 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
-      
-      // Scroll spy for homepage sections
-      if (pathname === '/') {
-        const sections = ['hero', 'overview'];
-        const scrollPosition = window.scrollY + 100;
-        
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const section = document.getElementById(sections[i]);
-          if (section) {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-              setActiveSection(sections[i]);
-              break;
-            }
-          }
-        }
-      } else {
-        setActiveSection('');
-      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
+    handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
-
-  // Only use isDark after mounting to avoid hydration mismatch
-  const isDark = mounted && resolvedTheme === 'dark';
+  }, []);
 
   return (
-    <motion.nav
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
-        scrolled 
-          ? 'glass-card border-[var(--glass-border)]' 
-          : 'border-transparent bg-transparent'
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo with animated gradient */}
-          <Link
-            href="/"
-            className="group relative text-xl font-bold text-[var(--text-primary)] transition-all hover:scale-105"
-            data-cursor="Home"
-          >
-            <motion.span
-              className="relative z-10 gradient-text"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-            >
-              Omkar Bhope
-            </motion.span>
-            <motion.div
-              className="absolute -inset-2 rounded-lg bg-gradient-to-r from-[var(--primary)]/20 via-[var(--accent)]/20 to-[var(--neon-green)]/20 opacity-0 blur-sm transition-opacity group-hover:opacity-100"
-              layoutId="logo-glow"
-            />
-          </Link>
+    <>
+      {/* Top Bar - Minimal */}
+      <motion.nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-white/5 dark:bg-black/5 backdrop-blur-sm' 
+            : 'bg-transparent'
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-14 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="group relative text-xl font-bold">
+              <motion.span
+                className="relative z-10 gradient-text"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+              >
+                Omkar Bhope
+              </motion.span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || 
-                (pathname === '/' && item.href === '/' && activeSection === 'hero');
-              const isHovered = hoveredItem === item.href;
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="relative px-3 py-2 text-sm font-medium transition-colors"
-                  onMouseEnter={() => setHoveredItem(item.href)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  data-cursor={item.label}
+            {/* Desktop - Theme Toggle */}
+            <div className="hidden md:flex items-center gap-4">
+              {mounted && (
+                <motion.button
+                  onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                  className="p-2.5 rounded-full bg-gray-800 dark:bg-gray-700 transition-colors"
+                  aria-label="Toggle theme"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <motion.span
-                    className={`relative z-10 ${
-                      isActive 
-                        ? 'text-[var(--primary)]' 
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                    }`}
-                    animate={{
-                      color: isActive ? 'var(--primary)' : isHovered ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    }}
-                  >
-                    {item.label}
-                  </motion.span>
-                  
-                  {/* Animated underline with morphing effect */}
-                  {isActive && (
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--primary)] nav-active-indicator"
-                      layoutId="activeIndicator"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                  
-                  {/* Hover glow effect */}
-                  <AnimatePresence>
-                    {isHovered && !isActive && (
+                  <AnimatePresence mode="wait">
+                    {resolvedTheme === 'dark' ? (
                       <motion.div
-                        className="absolute inset-0 rounded-md bg-[var(--primary)]/5"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
-                      />
+                        key="sun"
+                        initial={{ rotate: -90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: 90, opacity: 0 }}
+                      >
+                        <Sun className="h-5 w-5 text-yellow-400" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="moon"
+                        initial={{ rotate: 90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: -90, opacity: 0 }}
+                      >
+                        <Moon className="h-5 w-5 text-white" />
+                      </motion.div>
                     )}
                   </AnimatePresence>
-                </Link>
-              );
-            })}
-            
-            {/* Theme Toggle with animation */}
-            {mounted && (
+                </motion.button>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="flex items-center gap-2 md:hidden">
+              {mounted && (
+                <motion.button
+                  onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                  className="p-2 rounded-md text-[var(--text-secondary)]"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {resolvedTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </motion.button>
+              )}
+              <motion.button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-[var(--text-secondary)]"
+                whileTap={{ scale: 0.9 }}
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Bottom Dock - macOS Style */}
+      <motion.div
+        className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 hidden md:block"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        {/* Dock Container - True macOS glassmorphism */}
+        <div className="macos-dock flex items-end gap-3 px-3 pt-2 pb-2 rounded-2xl">
+          {navItems.map((item, index) => (
+            <DockItem
+              key={item.href}
+              item={item}
+              isActive={pathname === item.href}
+              hoveredIndex={hoveredIndex}
+              index={index}
+              setHoveredIndex={setHoveredIndex}
+            />
+          ))}
+          
+          {/* Divider */}
+          <div className="w-px h-10 bg-white/20 mx-1 self-center" />
+          
+          {/* Theme toggle */}
+          {mounted && (
+            <div className="relative flex flex-col items-center">
               <motion.button
                 onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-                className="relative ml-2 p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--background-secondary)] transition-colors overflow-hidden"
-                aria-label="Toggle theme"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                data-cursor={isDark ? 'Light Mode' : 'Dark Mode'}
+                onMouseEnter={() => setHoveredIndex(navItems.length)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                className="relative w-12 h-12 rounded-[12px] shadow-lg shadow-black/20 flex items-center justify-center overflow-hidden"
+                style={{
+                  background: resolvedTheme === 'dark' 
+                    ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' 
+                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                }}
+                animate={{ 
+                  scale: hoveredIndex === navItems.length ? 1.6 : 1,
+                  y: hoveredIndex === navItems.length ? -12 : 0,
+                }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               >
+                {/* Gloss effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-transparent" />
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-[12px]" />
+                
                 <AnimatePresence mode="wait">
                   {resolvedTheme === 'dark' ? (
                     <motion.div
                       key="sun"
-                      initial={{ y: 20, opacity: 0, rotate: -90 }}
-                      animate={{ y: 0, opacity: 1, rotate: 0 }}
-                      exit={{ y: -20, opacity: 0, rotate: 90 }}
+                      initial={{ rotate: -90, scale: 0 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      exit={{ rotate: 90, scale: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Sun className="h-5 w-5" />
+                      <Sun className="w-6 h-6 text-yellow-400 relative z-10 drop-shadow-md" strokeWidth={2.5} />
                     </motion.div>
                   ) : (
                     <motion.div
                       key="moon"
-                      initial={{ y: 20, opacity: 0, rotate: 90 }}
-                      animate={{ y: 0, opacity: 1, rotate: 0 }}
-                      exit={{ y: -20, opacity: 0, rotate: -90 }}
+                      initial={{ rotate: 90, scale: 0 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      exit={{ rotate: -90, scale: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Moon className="h-5 w-5" />
+                      <Moon className="w-6 h-6 text-white relative z-10 drop-shadow-md" strokeWidth={2.5} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                {/* Tooltip */}
+                <AnimatePresence>
+                  {hoveredIndex === navItems.length && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 5 }}
+                      className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-md bg-gray-800/95 text-white text-xs font-medium whitespace-nowrap shadow-lg"
+                    >
+                      {resolvedTheme === 'dark' ? 'Light' : 'Dark'}
+                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-gray-800/95" />
                     </motion.div>
                   )}
                 </AnimatePresence>
               </motion.button>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="flex items-center gap-2 md:hidden">
-            {mounted && (
-              <motion.button
-                onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-                className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                aria-label="Toggle theme"
-                whileTap={{ scale: 0.9 }}
-              >
-                {resolvedTheme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </motion.button>
-            )}
-            <motion.button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Toggle menu"
-              whileTap={{ scale: 0.9 }}
-            >
-              <AnimatePresence mode="wait">
-                {mobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X className="h-6 w-6" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu className="h-6 w-6" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
+              <div className="mt-1 w-1 h-1 rounded-full opacity-0" />
+            </div>
+          )}
         </div>
+      </motion.div>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
+      {/* Mobile Navigation - Full Screen */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 md:hidden"
+          >
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="md:hidden overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="absolute right-0 top-0 bottom-0 w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-gray-200/50 dark:border-gray-800/50 p-6 pt-20"
             >
-              <motion.div 
-                className="space-y-1 px-2 pb-4 pt-2"
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={{
-                  open: {
-                    transition: { staggerChildren: 0.05 }
-                  },
-                  closed: {
-                    transition: { staggerChildren: 0.02, staggerDirection: -1 }
-                  }
-                }}
-              >
+              <div className="space-y-2">
                 {navItems.map((item, index) => {
+                  const Icon = item.icon;
                   const isActive = pathname === item.href;
+                  
                   return (
                     <motion.div
                       key={item.href}
-                      variants={{
-                        open: { opacity: 1, x: 0 },
-                        closed: { opacity: 0, x: -20 }
-                      }}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
                     >
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-2 px-3 py-3 text-base font-medium rounded-lg transition-all ${
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                           isActive
-                            ? 'bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white'
-                            : 'text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]'
+                            ? `bg-gradient-to-r ${item.color} text-white`
+                            : 'text-[var(--text-secondary)] hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-[var(--text-primary)]'
                         }`}
                       >
-                        {isActive && <Sparkles className="h-4 w-4" />}
-                        {item.label}
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center`}>
+                          <Icon className="w-4 h-4 text-white" strokeWidth={2.5} />
+                        </div>
+                        <span className="font-medium">{item.label}</span>
                       </Link>
                     </motion.div>
                   );
                 })}
-              </motion.div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

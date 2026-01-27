@@ -12,7 +12,7 @@ async function getProject(id: string): Promise<Project | null> {
     const { ObjectId } = await import('mongodb');
     
     const project = await db.collection<Project>('projects').findOne({
-      _id: new ObjectId(id),
+      _id: new ObjectId(id) as unknown as string,
     });
 
     if (!project) return null;

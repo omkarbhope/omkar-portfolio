@@ -69,21 +69,21 @@ const sections = [
 
 export default function ScrollSections() {
   return (
-    <div className="relative bg-[#0A0A0A]">
+    <div className="relative bg-[var(--background)]">
       {/* Section Header */}
-      <div className="py-24 text-center">
+      <div className="py-24 text-center px-4">
         <ScrollReveal>
           <motion.p 
-            className="text-[var(--primary)] font-medium mb-4"
+            className="text-[var(--primary)] font-medium mb-4 text-sm tracking-wider"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
           >
             EXPLORE
           </motion.p>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text-primary)]">
             Discover My <span className="gradient-text">Portfolio</span>
           </h2>
-          <p className="mt-4 text-gray-400 max-w-xl mx-auto">
+          <p className="mt-4 text-[var(--text-secondary)] max-w-xl mx-auto">
             Scroll through my work, experience, and achievements
           </p>
         </ScrollReveal>
@@ -114,16 +114,16 @@ export default function ScrollSections() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
                       >
-                        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${section.gradient} bg-opacity-10 border border-white/10 mb-6`}>
+                        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${section.gradient} border border-[var(--border)] mb-6`}>
                           <Icon className="h-4 w-4 text-white" />
                           <span className="text-sm font-medium text-white">{section.subtitle}</span>
                         </div>
                         
-                        <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+                        <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] mb-6">
                           {section.title}
                         </h3>
                         
-                        <p className="text-lg text-gray-400 mb-8 max-w-xl">
+                        <p className="text-lg text-[var(--text-secondary)] mb-8 max-w-xl">
                           {section.description}
                         </p>
 
@@ -133,7 +133,7 @@ export default function ScrollSections() {
                             {section.techIcons.map((TechIcon, i) => (
                               <motion.div
                                 key={i}
-                                className="p-3 rounded-xl bg-gray-800/50 border border-gray-700"
+                                className="p-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)]"
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
@@ -173,14 +173,14 @@ export default function ScrollSections() {
                         
                         {/* Card */}
                         <motion.div
-                          className="relative rounded-3xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm p-8 overflow-hidden"
-                          whileHover={{ borderColor: 'rgba(255,255,255,0.2)' }}
+                          className="relative rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)]/80 backdrop-blur-sm p-8 overflow-hidden"
+                          whileHover={{ borderColor: 'var(--border-hover)' }}
                         >
                           {/* Background Pattern */}
                           <div 
-                            className="absolute inset-0 opacity-5"
+                            className="absolute inset-0 opacity-[0.03] dark:opacity-5"
                             style={{
-                              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+                              backgroundImage: `radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)`,
                               backgroundSize: '20px 20px',
                             }}
                           />
@@ -198,7 +198,7 @@ export default function ScrollSections() {
                               {[1, 2, 3].map((_, i) => (
                                 <motion.div
                                   key={i}
-                                  className="h-3 bg-gray-800 rounded-full overflow-hidden"
+                                  className="h-3 bg-[var(--border)] rounded-full overflow-hidden"
                                   initial={{ width: '0%' }}
                                   whileInView={{ width: `${100 - i * 20}%` }}
                                   viewport={{ once: true }}
@@ -242,10 +242,10 @@ export default function ScrollSections() {
       <div className="py-32 px-4">
         <ScrollReveal>
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mb-6">
               Ready to <span className="gradient-text">Connect</span>?
             </h2>
-            <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+            <p className="text-lg text-[var(--text-secondary)] mb-10 max-w-2xl mx-auto">
               Whether you have a project in mind, want to discuss opportunities, or just want to say hello — I&apos;d love to hear from you.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -260,7 +260,7 @@ export default function ScrollSections() {
               </Link>
               <Link href="/resume">
                 <motion.button
-                  className="px-8 py-4 rounded-xl border border-gray-700 text-white font-medium text-lg hover:border-[var(--primary)] transition-colors"
+                  className="px-8 py-4 rounded-xl border border-[var(--border)] text-[var(--text-primary)] font-medium text-lg hover:border-[var(--primary)] transition-colors"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

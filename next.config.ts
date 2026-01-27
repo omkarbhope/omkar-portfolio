@@ -14,8 +14,6 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  // Optimize fonts
-  optimizeFonts: true,
 };
 
 export default nextConfig;

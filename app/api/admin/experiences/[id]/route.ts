@@ -15,7 +15,7 @@ export async function GET(
     const { ObjectId } = await import('mongodb');
 
     const experience = await db.collection<Experience>('experiences').findOne({
-      _id: new ObjectId(id) as any,
+      _id: new ObjectId(id) as unknown as string,
     });
 
     if (!experience) {
@@ -59,7 +59,7 @@ export async function PUT(
     };
 
     await db.collection<Experience>('experiences').updateOne(
-      { _id: new ObjectId(id) as any },
+      { _id: new ObjectId(id) as unknown as string },
       { $set: updateData }
     );
 
@@ -92,7 +92,7 @@ export async function DELETE(
     const db = await getDatabase();
     const { ObjectId } = await import('mongodb');
 
-    await db.collection<Experience>('experiences').deleteOne({ _id: new ObjectId(id) as any });
+    await db.collection('experiences').deleteOne({ _id: new ObjectId(id) });
 
     // Delete associated embeddings
     await db.collection('embeddings').deleteMany({

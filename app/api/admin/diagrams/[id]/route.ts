@@ -14,7 +14,7 @@ export async function DELETE(
     const { ObjectId } = await import('mongodb');
 
     await db.collection<ArchitectureDiagram>('architectureDiagrams').deleteOne({
-      _id: new ObjectId(id),
+      _id: new ObjectId(id) as unknown as string,
     });
 
     return NextResponse.json({ success: true });

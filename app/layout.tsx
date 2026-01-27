@@ -39,7 +39,7 @@ export default function RootLayout({
           <Cursor />
           <ProgressBar />
           <Navigation />
-          <main>{children}</main>
+          <main className="pb-28 md:pb-32">{children}</main>
         </ThemeProvider>
       </body>
     </html>
