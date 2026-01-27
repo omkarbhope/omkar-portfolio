@@ -77,7 +77,7 @@ export default function ExperienceProjectCard({
                 </Badge>
               ))}
               {project.technologies.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="default" className="text-xs">
                   +{project.technologies.length - 3} more
                 </Badge>
               )}

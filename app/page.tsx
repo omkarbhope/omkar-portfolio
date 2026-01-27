@@ -1,14 +1,11 @@
-import Hero from "@/components/Hero";
-import SectionOverview from "@/components/SectionOverview";
-import PageTransition from "@/components/animations/PageTransition";
+import AIHero from "@/components/AIHero";
+import ScrollSections from "@/components/ScrollSections";
 
 export default function Home() {
   return (
-    <PageTransition>
-      <div className="min-h-screen">
-        <Hero />
-        <SectionOverview />
-      </div>
-    </PageTransition>
+    <div className="bg-[#0A0A0A]">
+      <AIHero />
+      <ScrollSections />
+    </div>
   );
 }

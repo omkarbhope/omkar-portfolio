@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import ProgressBar from "@/components/ui/ProgressBar";
+import Cursor from "@/components/ui/Cursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider>
+          <Cursor />
           <ProgressBar />
           <Navigation />
           <main>{children}</main>
