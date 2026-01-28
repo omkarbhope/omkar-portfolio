@@ -210,7 +210,7 @@ export default function AnimatedBackground({ skills = [] }: AnimatedBackgroundPr
     return () => clearInterval(interval);
   }, [allSkills.length]);
 
-  // Get current visible skills
+  // Get current visible skills - use deterministic positions to avoid hydration mismatch
   const visibleSkills = useMemo((): PositionedSkill[] => {
     if (allSkills.length === 0) return [];
 
@@ -223,12 +223,18 @@ export default function AnimatedBackground({ skills = [] }: AnimatedBackgroundPr
           ...allSkills.slice(0, Math.max(0, (startIndex + MAX_VISIBLE_BUBBLES) - allSkills.length)),
         ].slice(0, MAX_VISIBLE_BUBBLES);
 
-    // Assign positions to skills
-    return selectedSkills.map((skill, index) => ({
-      ...skill,
-      x: bubblePositions[index % bubblePositions.length].x + (Math.random() * 4 - 2),
-      y: bubblePositions[index % bubblePositions.length].y + (Math.random() * 4 - 2),
-    }));
+    // Assign positions to skills - use deterministic offsets based on index
+    return selectedSkills.map((skill, index) => {
+      const pos = bubblePositions[index % bubblePositions.length];
+      // Deterministic offset based on skill name length and index
+      const offsetX = ((skill.name.length % 5) - 2) * 0.5;
+      const offsetY = ((index % 4) - 2) * 0.5;
+      return {
+        ...skill,
+        x: pos.x + offsetX,
+        y: pos.y + offsetY,
+      };
+    });
   }, [allSkills, rotationIndex]);
 
   return (
