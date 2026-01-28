@@ -84,12 +84,45 @@ function formatContextWithMetadata(
   }).join('\n\n---\n\n');
 }
 
+// Handle CORS preflight
+export async function OPTIONS(request: Request) {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(request: Request) {
   try {
-    const { message, history } = await request.json();
+    const { message, history, apiKey } = await request.json();
+
+    // Optional API key check (if CHAT_API_KEY is set in env)
+    if (process.env.CHAT_API_KEY && apiKey !== process.env.CHAT_API_KEY) {
+      return NextResponse.json(
+        { error: 'Invalid API key' },
+        { 
+          status: 401,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+    }
 
     if (!message || typeof message !== 'string') {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Message is required' },
+        { 
+          status: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
     }
 
     // Analyze query intent
@@ -263,13 +296,20 @@ ${honors}`,
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Content-Type',
       },
     });
   } catch (error) {
     console.error('Chat error:', error);
     return NextResponse.json(
       { error: 'Failed to process chat message' },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
     );
   }
 }
