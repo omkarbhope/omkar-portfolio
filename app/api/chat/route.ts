@@ -100,8 +100,13 @@ export async function POST(request: Request) {
   try {
     const { message, history, apiKey } = await request.json();
 
-    // Optional API key check (if CHAT_API_KEY is set in env)
-    if (process.env.CHAT_API_KEY && apiKey !== process.env.CHAT_API_KEY) {
+    // API key only required for external/cross-origin requests; same-origin (your site) works without it
+    const origin = request.headers.get('origin') || request.headers.get('referer') || '';
+    const requestHost = new URL(request.url).host;
+    const isSameOrigin = !origin || origin.includes(requestHost) || origin.includes('localhost');
+    const hasValidApiKey = apiKey === process.env.CHAT_API_KEY;
+
+    if (process.env.CHAT_API_KEY && !isSameOrigin && !hasValidApiKey) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { 
