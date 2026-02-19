@@ -34,7 +34,10 @@ function detectQueryIntent(message: string): {
   if (messageLower.includes('award') || messageLower.includes('achievement') || messageLower.includes('recognition')) {
     types.push('award');
   }
-  
+  if (messageLower.includes('blog') || messageLower.includes('post') || messageLower.includes('article') || messageLower.includes('writing')) {
+    types.push('blog');
+  }
+
   // Detect company/org names
   const companyPatterns = ['etched', 'ucsd', 'uc san diego', 'pict', 'persistent', 'dassault'];
   for (const pattern of companyPatterns) {
@@ -74,12 +77,13 @@ function formatContextWithMetadata(
     // Add useful metadata to header
     if (meta.company) header += ` Company: ${meta.company}`;
     if (meta.position) header += ` | Role: ${meta.position}`;
-    if (meta.title) header += ` | Title: ${meta.title}`;
+    if (meta.blogId && meta.title) header += ` | Blog: ${meta.title}`;
+    else if (meta.title) header += ` | Title: ${meta.title}`;
     if (meta.projectName) header += ` | Project: ${meta.projectName}`;
     if (meta.skillCategory) header += ` | Category: ${meta.skillCategory}`;
     if (meta.institution) header += ` | Institution: ${meta.institution}`;
     if (meta.type) header += ` | Type: ${meta.type}`;
-    
+
     return `${header}\n${item.content}`;
   }).join('\n\n---\n\n');
 }
@@ -252,6 +256,19 @@ ${honors}`,
             content: `Skills in ${category}: ${skillList.join(', ')}`,
             metadata: { skillCategory: category, type: 'skill' },
             score: 0.8
+          });
+        }
+      }
+
+      if (intent.types.includes('blog')) {
+        const blogs = await db.collection('blogs').find({}).sort({ updatedAt: -1 }).limit(10).toArray();
+        for (const blog of blogs) {
+          const excerpt = blog.excerpt || '';
+          const title = blog.title || '';
+          allResults.push({
+            content: `Blog: ${title}\n${excerpt}\n(Read full post at /blogs/${blog.slug})`,
+            metadata: { blogId: blog._id?.toString(), title, slug: blog.slug, type: 'blog' },
+            score: 0.85
           });
         }
       }

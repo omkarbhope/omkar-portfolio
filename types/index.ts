@@ -98,10 +98,27 @@ export interface ArchitectureDiagram {
   createdAt: Date;
 }
 
+// BlockNote block shape (minimal for storage); full type from @blocknote/core in components
+export type BlogBlock = Record<string, unknown>;
+
+export interface Blog {
+  _id?: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: BlogBlock[];
+  coverImage?: string;
+  publishedAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  tags?: string[];
+  author?: string;
+}
+
 export interface Embedding {
   _id?: string;
   content: string;
-  contentType: 'resume' | 'project' | 'experience' | 'skill' | 'license' | 'award' | 'education';
+  contentType: 'resume' | 'project' | 'experience' | 'skill' | 'license' | 'award' | 'education' | 'blog';
   referenceId: string;
   metadata: Record<string, any>;
   embedding: number[];

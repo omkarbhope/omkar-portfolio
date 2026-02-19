@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Spline import - uncomment when you have a scene URL
@@ -215,7 +215,7 @@ function AnimatedAvatar({ state }: { state: AvatarState }) {
   );
 }
 
-export default function Avatar3D({ state, className = '' }: Avatar3DProps) {
+function Avatar3D({ state, className = '' }: Avatar3DProps) {
   const [useSpline, setUseSpline] = useState(false);
   
   // Uncomment below and add your Spline scene URL to use 3D Spline avatar
@@ -264,3 +264,5 @@ export default function Avatar3D({ state, className = '' }: Avatar3DProps) {
     </motion.div>
   );
 }
+
+export default React.memo(Avatar3D);

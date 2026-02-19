@@ -88,3 +88,17 @@ export const awardSchema = z.object({
 });
 
 export type AwardFormData = z.infer<typeof awardSchema>;
+
+// Blog validation schema (BlockNote content = array of blocks)
+export const blogSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  slug: z.string().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must be lowercase letters, numbers, and hyphens only'),
+  excerpt: z.string().default(''),
+  content: z.array(z.record(z.unknown())).default([]),
+  coverImage: z.string().url().optional().or(z.literal('')),
+  publishedAt: z.string().optional().nullable(),
+  tags: z.array(z.string()).optional().default([]),
+  author: z.string().optional(),
+});
+
+export type BlogFormData = z.infer<typeof blogSchema>;

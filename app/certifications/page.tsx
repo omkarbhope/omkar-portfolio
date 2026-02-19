@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { LicenseCertification } from '@/types';
 import CertificationsList from '@/components/CertificationsList';
 
+export const dynamic = 'force-dynamic';
+
 async function getCertifications(): Promise<LicenseCertification[]> {
   try {
     const db = await getDatabase();

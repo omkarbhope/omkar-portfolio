@@ -5,6 +5,8 @@ import { ArrowLeft } from 'lucide-react';
 import ExperienceProjectCard from '@/components/ExperienceProjectCard';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 
+export const dynamic = 'force-dynamic';
+
 async function getExperience(experienceId: string): Promise<Experience | null> {
   try {
     const db = await getDatabase();

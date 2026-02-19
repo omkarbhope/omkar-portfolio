@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { ExternalLink, Github, ArrowLeft } from 'lucide-react';
 import ProjectDetailClient from '@/components/ProjectDetailClient';
 
+export const dynamic = 'force-dynamic';
+
 async function getProject(id: string): Promise<Project | null> {
   try {
     const db = await getDatabase();

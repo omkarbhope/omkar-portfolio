@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import type { Skill } from '@/types';
@@ -182,7 +182,7 @@ function GridPattern() {
   );
 }
 
-export default function AnimatedBackground({ skills = [] }: AnimatedBackgroundProps) {
+function AnimatedBackgroundInner({ skills = [] }: AnimatedBackgroundProps) {
   const [rotationIndex, setRotationIndex] = useState(0);
 
   // Prepare all skills with varied sizes - distributed pattern for visual variety
@@ -270,3 +270,5 @@ export default function AnimatedBackground({ skills = [] }: AnimatedBackgroundPr
     </div>
   );
 }
+
+export default React.memo(AnimatedBackgroundInner);

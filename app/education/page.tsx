@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { Education } from '@/types';
 import EducationTimeline from '@/components/EducationTimeline';
 
+export const dynamic = 'force-dynamic';
+
 async function getEducation(): Promise<Education[]> {
   try {
     const db = await getDatabase();

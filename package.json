@@ -12,7 +12,13 @@
     "test-vector-search": "tsx scripts/test-vector-search.ts"
   },
   "dependencies": {
+    "@blocknote/core": "^0.46.2",
+    "@blocknote/mantine": "^0.46.2",
+    "@blocknote/react": "^0.46.2",
     "@hookform/resolvers": "^3.3.4",
+    "@mantine/core": "^8.3.15",
+    "@mantine/hooks": "^8.3.15",
+    "@mantine/utils": "^6.0.22",
     "@splinetool/react-spline": "^4.1.0",
     "@splinetool/runtime": "^1.12.39",
     "@tanstack/react-query": "^5.28.0",

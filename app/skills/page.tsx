@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { Skill } from '@/types';
 import SkillsShowcase from '@/components/SkillsShowcase';
 
+export const dynamic = 'force-dynamic';
+
 async function getSkills(): Promise<Skill[]> {
   try {
     const db = await getDatabase();

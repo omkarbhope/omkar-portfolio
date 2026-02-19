@@ -7,6 +7,8 @@ import Badge from '@/components/ui/Badge';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import ArchitectureDiagramImage from '@/components/ArchitectureDiagramImage';
 
+export const dynamic = 'force-dynamic';
+
 async function getExperience(experienceId: string): Promise<Experience | null> {
   try {
     const db = await getDatabase();

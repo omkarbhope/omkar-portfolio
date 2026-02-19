@@ -5,16 +5,17 @@ import { getDatabase } from '@/lib/mongodb';
 
 async function getStats() {
   const db = await getDatabase();
-  const [projects, experiences, education, skills, certifications, awards] = await Promise.all([
+  const [projects, experiences, education, skills, certifications, awards, blogs] = await Promise.all([
     db.collection('projects').countDocuments(),
     db.collection('experiences').countDocuments(),
     db.collection('education').countDocuments(),
     db.collection('skills').countDocuments(),
     db.collection('licensesCertifications').countDocuments(),
     db.collection('awards').countDocuments(),
+    db.collection('blogs').countDocuments(),
   ]);
 
-  return { projects, experiences, education, skills, certifications, awards };
+  return { projects, experiences, education, skills, certifications, awards, blogs };
 }
 
 export default async function AdminDashboard() {
@@ -33,6 +34,7 @@ export default async function AdminDashboard() {
     { href: '/admin/skills', label: 'Skills', count: stats.skills },
     { href: '/admin/certifications', label: 'Certifications', count: stats.certifications },
     { href: '/admin/awards', label: 'Awards', count: stats.awards },
+    { href: '/admin/blogs', label: 'Blogs', count: stats.blogs },
   ];
 
   return (

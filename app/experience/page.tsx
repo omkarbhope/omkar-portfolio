@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { Experience } from '@/types';
 import ExperienceTimeline from '@/components/ExperienceTimeline';
 
+export const dynamic = 'force-dynamic';
+
 async function getExperiences(): Promise<Experience[]> {
   try {
     const db = await getDatabase();

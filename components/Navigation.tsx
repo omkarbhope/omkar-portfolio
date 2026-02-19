@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { 
   Moon, Sun, Menu, X, Home, FileText, Rocket, Briefcase, 
-  GraduationCap, Zap, Award, Trophy, Mail, MessageSquare 
+  GraduationCap, Zap, Award, Trophy, Mail, MessageSquare, BookOpen 
 } from 'lucide-react';
 
 const navItems = [
@@ -19,6 +19,7 @@ const navItems = [
   { href: '/skills', label: 'Skills', icon: Zap, color: 'from-yellow-400 to-amber-500' },
   { href: '/certifications', label: 'Certifications', icon: Award, color: 'from-pink-400 to-rose-500' },
   { href: '/awards', label: 'Awards', icon: Trophy, color: 'from-cyan-400 to-teal-500' },
+  { href: '/blogs', label: 'Blogs', icon: BookOpen, color: 'from-teal-400 to-cyan-500' },
   { href: '/contact', label: 'Contact', icon: Mail, color: 'from-indigo-400 to-blue-500' },
   { href: '/chat', label: 'Chat', icon: MessageSquare, color: 'from-violet-400 to-purple-500' },
 ];

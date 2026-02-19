@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { Award } from '@/types';
 import AwardsList from '@/components/AwardsList';
 
+export const dynamic = 'force-dynamic';
+
 async function getAwards(): Promise<Award[]> {
   try {
     const db = await getDatabase();

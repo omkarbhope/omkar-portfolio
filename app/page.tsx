@@ -3,6 +3,8 @@ import ScrollSections from "@/components/ScrollSections";
 import { getDatabase } from '@/lib/mongodb';
 import type { Skill } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 async function getSkills(): Promise<Skill[]> {
   try {
     const db = await getDatabase();

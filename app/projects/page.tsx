@@ -2,6 +2,8 @@ import { getDatabase } from '@/lib/mongodb';
 import type { Project } from '@/types';
 import ProjectCard from '@/components/ProjectCard';
 
+export const dynamic = 'force-dynamic';
+
 async function getProjects(): Promise<Project[]> {
   try {
     const db = await getDatabase();
