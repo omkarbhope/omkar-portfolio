@@ -931,6 +931,39 @@ html {
   border: none;
 }
 
+/* Video embeds: full width like images; YouTube/Drive iframe */
+.blog-post-content .bn-block-content[data-content-type="video"] .bn-file-block-content-wrapper,
+.blog-post-view .bn-block-content[data-content-type="video"] .bn-file-block-content-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+.blog-post-content .bn-block-content[data-content-type="video"] video,
+.blog-post-view .bn-block-content[data-content-type="video"] video {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+.blog-post-content .blog-video-embed-wrap,
+.blog-post-view .blog-video-embed-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--muted);
+}
+.blog-post-content .blog-video-embed-iframe,
+.blog-post-view .blog-video-embed-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 .blog-post-content .bn-block-content img {
   border-radius: var(--radius-md);
   max-width: 100%;

@@ -7,7 +7,7 @@ import { BlockNoteView } from '@blocknote/mantine';
 import type { BlogBlock } from '@/types';
 import type { TocEntry } from '@/lib/blog-utils';
 import { transformContentUrls } from '@/lib/blocknote-utils';
-import { toProxiedMediaUrl, isDriveUrl } from '@/lib/drive-url';
+import { toProxiedMediaUrl, isDriveUrl, toDrivePreviewUrl, toYoutubeEmbedUrl, resolveProxiedUrl } from '@/lib/drive-url';
 
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
@@ -76,6 +76,8 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    const editorEl = (editor as { domElement?: HTMLElement | null }).domElement;
+    const root = editorEl || container;
 
     const runPrismAndCopyButtons = () => {
       const Prism = require('prismjs');
@@ -90,7 +92,7 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
       require('prismjs/components/prism-markdown');
       require('prismjs/components/prism-yaml');
 
-      container.querySelectorAll<HTMLElement>('pre').forEach((pre) => {
+      root.querySelectorAll<HTMLElement>('pre').forEach((pre) => {
         if (pre.hasAttribute('data-copy-ready')) return;
         const code = pre.querySelector('code');
         if (!code) return;
@@ -125,13 +127,83 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
         if (prev?.querySelector?.('select')) (prev as HTMLElement).style.display = 'none';
       });
       /* Hide any remaining language bar (div with select) inside block content */
-      container.querySelectorAll<HTMLElement>('.bn-block-content div').forEach((div) => {
+      root.querySelectorAll<HTMLElement>('.bn-block-content div').forEach((div) => {
         if (div.querySelector('select')) div.style.display = 'none';
       });
 
-      /* Preview (iframe) and Download for file/video/audio embeds (not image – images are shown inline) */
-      const embedSelector = '.bn-block-content[data-content-type="file"], .bn-block-content[data-content-type="video"], .bn-block-content[data-content-type="audio"]';
-      container.querySelectorAll<HTMLElement>(embedSelector).forEach((block) => {
+      /* YouTube/Drive video blocks: get embed URL from block data-url or content, inject iframe */
+      const videoEmbedUrls: string[] = [];
+      function collectVideoUrls(blocks: BlogBlock[]) {
+        for (const b of blocks) {
+          const props = b.props as Record<string, unknown> | undefined;
+          const url = props?.url;
+          if (b.type === 'video' && typeof url === 'string' && url.trim()) {
+            const resolved = resolveProxiedUrl(url) || url.trim();
+            const src = toYoutubeEmbedUrl(resolved) || (isDriveUrl(resolved) ? toDrivePreviewUrl(resolved) : '');
+            if (src) videoEmbedUrls.push(src);
+          }
+          const children = b.children as BlogBlock[] | undefined;
+          if (Array.isArray(children) && children.length) collectVideoUrls(children);
+        }
+      }
+      collectVideoUrls(content);
+
+      /* Match video blocks in DOM – BlockNote may use data-content-type="video" or we find wrapper with video/link */
+      let videoBlocks = Array.from(root.querySelectorAll<HTMLElement>('.bn-block-content[data-content-type="video"]'));
+      if (videoBlocks.length === 0) {
+        const wrappers = root.querySelectorAll<HTMLElement>('.bn-file-block-content-wrapper');
+        videoBlocks = [];
+        wrappers.forEach((w) => {
+          const block = w.closest('.bn-block-content');
+          if (block && (w.querySelector('video') || w.querySelector('a[href*="youtube"]') || w.querySelector('a[href*="youtu.be"]') || w.querySelector('a[href*="drive.google"]'))) {
+            videoBlocks.push(block as HTMLElement);
+          }
+        });
+      }
+
+      videoBlocks.forEach((block, i) => {
+        let embedSrc = '';
+        const dataUrl = block.getAttribute('data-url');
+        if (dataUrl && dataUrl !== 'true' && dataUrl !== 'false') {
+          const resolved = resolveProxiedUrl(dataUrl) || dataUrl;
+          embedSrc = toYoutubeEmbedUrl(resolved) || (isDriveUrl(resolved) ? toDrivePreviewUrl(resolved) : '');
+        }
+        if (!embedSrc && videoEmbedUrls[i]) embedSrc = videoEmbedUrls[i];
+        if (!embedSrc) {
+          const anchor = block.querySelector<HTMLAnchorElement>('a[href]');
+          const video = block.querySelector<HTMLVideoElement>('video');
+          const raw = (video?.src || video?.querySelector('source')?.src || anchor?.href || '').trim();
+          if (raw) {
+            const resolved = resolveProxiedUrl(raw) || raw;
+            embedSrc = toYoutubeEmbedUrl(resolved) || (isDriveUrl(resolved) ? toDrivePreviewUrl(resolved) : '');
+          }
+        }
+        if (!embedSrc) return;
+
+        const wrapper = block.querySelector<HTMLElement>('.bn-file-block-content-wrapper') || block;
+        let wrap = wrapper.querySelector<HTMLDivElement>('.blog-video-embed-wrap');
+        if (!wrap) {
+          wrap = document.createElement('div');
+          wrap.className = 'blog-video-embed-wrap';
+          wrap.setAttribute('data-blog-video-embed', 'true');
+          const iframe = document.createElement('iframe');
+          iframe.src = embedSrc;
+          iframe.title = 'Video';
+          iframe.className = 'blog-video-embed-iframe';
+          iframe.setAttribute('loading', 'lazy');
+          wrap.appendChild(iframe);
+          wrapper.prepend(wrap);
+        }
+        wrapper.querySelectorAll(':scope > *').forEach((child) => {
+          const el = child as HTMLElement;
+          if (el.classList.contains('blog-video-embed-wrap') || el.classList.contains('bn-file-caption')) return;
+          el.style.display = 'none';
+        });
+      });
+
+      /* Preview (iframe) and Download for file/audio only (not image, not video) */
+      const embedSelector = '.bn-block-content[data-content-type="file"], .bn-block-content[data-content-type="audio"]';
+      root.querySelectorAll<HTMLElement>(embedSelector).forEach((block) => {
         if (block.hasAttribute('data-embed-actions-injected')) return;
         const dataUrl = block.getAttribute('data-url');
         const anchor = block.querySelector<HTMLAnchorElement>('a[href]');
@@ -194,10 +266,13 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
     };
 
     schedule();
+    /* Run again so video blocks are found after editor/content have mounted */
+    setTimeout(schedule, 400);
+    setTimeout(schedule, 1000);
     const observer = new MutationObserver(() => schedule());
-    observer.observe(container, { childList: true, subtree: true });
+    observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
     return () => observer.disconnect();
-  }, [content]);
+  }, [content, editor]);
 
   return (
     <div
