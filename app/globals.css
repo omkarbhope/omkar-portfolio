@@ -858,6 +858,79 @@ html {
   border-radius: var(--radius-lg);
 }
 
+/* Preview (iframe) and Download bar for file/image/video/audio embeds */
+.blog-post-content .blog-embed-actions-wrap,
+.blog-post-view .blog-embed-actions-wrap {
+  margin-top: 0.75rem;
+}
+.blog-post-content .blog-embed-actions,
+.blog-post-view .blog-embed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding: 0.25rem 0;
+}
+.blog-post-content .blog-embed-actions .blog-embed-preview-btn,
+.blog-post-view .blog-embed-actions .blog-embed-preview-btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+.blog-post-content .blog-embed-actions .blog-embed-preview-btn:hover,
+.blog-post-view .blog-embed-actions .blog-embed-preview-btn:hover {
+  text-decoration: underline;
+}
+.blog-post-content .blog-embed-actions .blog-embed-download,
+.blog-post-view .blog-embed-actions .blog-embed-download {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, width 0.2s ease;
+}
+.blog-post-content .blog-embed-actions-wrap:hover .blog-embed-download,
+.blog-post-view .blog-embed-actions-wrap:hover .blog-embed-download {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+  overflow: visible;
+}
+.blog-post-content .blog-embed-actions .blog-embed-download:hover,
+.blog-post-view .blog-embed-actions .blog-embed-download:hover {
+  text-decoration: underline;
+}
+.blog-post-content .blog-embed-preview-panel[hidden],
+.blog-post-view .blog-embed-preview-panel[hidden] {
+  display: none !important;
+}
+.blog-post-content .blog-embed-preview-panel,
+.blog-post-view .blog-embed-preview-panel {
+  margin-top: 0.75rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--muted);
+}
+.blog-post-content .blog-embed-preview-iframe,
+.blog-post-view .blog-embed-preview-iframe {
+  display: block;
+  width: 100%;
+  min-height: 480px;
+  height: 60vh;
+  max-height: 720px;
+  border: none;
+}
+
 .blog-post-content .bn-block-content img {
   border-radius: var(--radius-md);
   max-width: 100%;

@@ -29,6 +29,8 @@ export default function EditBlogPage() {
     resolver: zodResolver(blogSchema),
   });
 
+  const onEditorReady = useCallback((e: BlockNoteEditor) => setEditor(e), []);
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -220,7 +222,7 @@ export default function EditBlogPage() {
               </label>
               <BlogEditor
                 initialContent={Array.isArray(blog.content) ? blog.content : []}
-                onEditorReady={useCallback((e: BlockNoteEditor) => setEditor(e), [])}
+                onEditorReady={onEditorReady}
               />
             </div>
           </div>

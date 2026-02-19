@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { toDirectImageUrl } from '@/lib/drive-url';
+import { isDriveUrl, toDirectImageUrl, toProxiedMediaUrl } from '@/lib/drive-url';
 
 interface BlogCoverImageProps {
   src: string;
@@ -24,8 +24,8 @@ export function BlogCoverImage({
   fallbackTitle,
 }: BlogCoverImageProps) {
   const [error, setError] = useState(false);
-  const resolved = toDirectImageUrl(src);
-  const isDrive = resolved.includes('drive.google.com');
+  const isDrive = isDriveUrl(src);
+  const resolved = isDrive ? toProxiedMediaUrl(src, '') : toDirectImageUrl(src);
 
   if (!resolved) return null;
 

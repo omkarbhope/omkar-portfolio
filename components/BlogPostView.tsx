@@ -7,7 +7,7 @@ import { BlockNoteView } from '@blocknote/mantine';
 import type { BlogBlock } from '@/types';
 import type { TocEntry } from '@/lib/blog-utils';
 import { transformContentUrls } from '@/lib/blocknote-utils';
-import { toDirectImageUrl } from '@/lib/drive-url';
+import { toProxiedMediaUrl, isDriveUrl } from '@/lib/drive-url';
 
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
@@ -53,10 +53,15 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const blockNoteTheme = resolvedTheme === 'dark' ? 'dark' : 'light';
-  const transformedContent = transformContentUrls(content, toDirectImageUrl);
+  const transformedContent = transformContentUrls(content, (url) => toProxiedMediaUrl(url, ''));
 
   const editor = useCreateBlockNote(
-    transformedContent.length > 0 ? { initialContent: transformedContent as any } : {},
+    transformedContent.length > 0
+      ? {
+          initialContent: transformedContent as any,
+          resolveFileUrl: (url: string) => Promise.resolve(toProxiedMediaUrl(url, '')),
+        }
+      : { resolveFileUrl: (url: string) => Promise.resolve(toProxiedMediaUrl(url, '')) },
     []
   );
 
@@ -122,6 +127,63 @@ function BlogPostViewInner({ content, headings = [] }: BlogPostViewProps) {
       /* Hide any remaining language bar (div with select) inside block content */
       container.querySelectorAll<HTMLElement>('.bn-block-content div').forEach((div) => {
         if (div.querySelector('select')) div.style.display = 'none';
+      });
+
+      /* Preview (iframe) and Download for file/video/audio embeds (not image – images are shown inline) */
+      const embedSelector = '.bn-block-content[data-content-type="file"], .bn-block-content[data-content-type="video"], .bn-block-content[data-content-type="audio"]';
+      container.querySelectorAll<HTMLElement>(embedSelector).forEach((block) => {
+        if (block.hasAttribute('data-embed-actions-injected')) return;
+        const dataUrl = block.getAttribute('data-url');
+        const anchor = block.querySelector<HTMLAnchorElement>('a[href]');
+        const img = block.querySelector<HTMLImageElement>('img[src]');
+        const media = block.querySelector<HTMLSourceElement>('video source[src], audio source[src]') || block.querySelector<HTMLMediaElement>('video[src], audio[src]');
+        const rawUrl = anchor?.href ?? img?.src ?? (media && ('src' in media) ? (media as HTMLMediaElement).src : null) ?? (dataUrl && dataUrl !== 'true' && dataUrl !== 'false' ? dataUrl : null);
+        if (!rawUrl || typeof rawUrl !== 'string') return;
+        const url = rawUrl.trim();
+        const wrapper = block.querySelector('.bn-file-block-content-wrapper') || block;
+        const actionsWrap = document.createElement('div');
+        actionsWrap.className = 'blog-embed-actions-wrap';
+        const bar = document.createElement('div');
+        bar.className = 'blog-embed-actions';
+        const previewBtn = document.createElement('button');
+        previewBtn.type = 'button';
+        previewBtn.className = 'blog-embed-preview-btn';
+        previewBtn.textContent = 'Preview';
+        const previewPanel = document.createElement('div');
+        previewPanel.className = 'blog-embed-preview-panel';
+        previewPanel.setAttribute('hidden', '');
+        const iframe = document.createElement('iframe');
+        iframe.title = 'Preview';
+        iframe.className = 'blog-embed-preview-iframe';
+        previewPanel.appendChild(iframe);
+        previewBtn.addEventListener('click', () => {
+          const isHidden = previewPanel.hasAttribute('hidden');
+          if (isHidden) {
+            previewPanel.removeAttribute('hidden');
+            if (!iframe.src) {
+              const origin = typeof window !== 'undefined' ? window.location.origin : '';
+              const previewSrc = url.startsWith('/') ? `${origin}${url}` : isDriveUrl(url) ? toProxiedMediaUrl(url, origin) : url;
+              iframe.src = previewSrc;
+            }
+            previewBtn.textContent = 'Hide preview';
+          } else {
+            previewPanel.setAttribute('hidden', '');
+            previewBtn.textContent = 'Preview';
+          }
+        });
+        const download = document.createElement('a');
+        download.href = url;
+        download.target = '_blank';
+        download.rel = 'noopener noreferrer';
+        download.setAttribute('download', '');
+        download.className = 'blog-embed-download';
+        download.textContent = 'Download';
+        bar.appendChild(previewBtn);
+        bar.appendChild(download);
+        actionsWrap.appendChild(bar);
+        actionsWrap.appendChild(previewPanel);
+        wrapper.appendChild(actionsWrap);
+        block.setAttribute('data-embed-actions-injected', 'true');
       });
     };
 
