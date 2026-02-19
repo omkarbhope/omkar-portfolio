@@ -70,6 +70,16 @@
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
+
+  /* Code block (blog) – light theme */
+  --code-bg: #f0f0f2;
+  --code-text: #1d1d1f;
+  --code-border: #d2d2d7;
+  --code-keyword: #0071e3;
+  --code-string: #c41a68;
+  --code-comment: #6e6e73;
+  --code-number: #098658;
+  --code-function: #795e26;
 }
 
 [data-theme="dark"] {
@@ -114,6 +124,16 @@
   --shadow-neon: 0 0 30px var(--primary-glow), 0 0 60px rgba(10, 132, 255, 0.3);
   --shadow-neon-accent: 0 0 30px var(--accent-glow), 0 0 60px rgba(191, 90, 242, 0.3);
   --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* Code block (blog) – dark theme */
+  --code-bg: #2d2d2d;
+  --code-text: #ccc;
+  --code-border: #3a3a3c;
+  --code-keyword: #cc99cd;
+  --code-string: #7ec699;
+  --code-comment: #969896;
+  --code-number: #f08d6a;
+  --code-function: #f8c555;
 }
 
 @theme inline {
@@ -598,4 +618,249 @@ html {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ===== Blog post content – professional layout & typography ===== */
+.blog-post-title {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.blog-post-content {
+  --blog-heading-color: var(--text-primary);
+  --blog-body-color: var(--text-secondary);
+  --blog-muted: var(--text-tertiary);
+  --blog-border: var(--border);
+}
+
+/* Make BlockNote use site theme – no separate "container" look, same surface as page */
+.blog-post-content .bn-mantine,
+.blog-post-content .bn-container,
+.blog-post-content [data-mantine-color-scheme] {
+  --bn-colors-editor-background: transparent;
+  --bn-colors-editor-text: var(--text-primary);
+  --bn-colors-menu-background: var(--background-alt);
+  --bn-colors-menu-text: var(--text-primary);
+  --bn-colors-tooltip-background: var(--background-alt);
+  --bn-colors-tooltip-text: var(--text-primary);
+  --bn-colors-hovered-background: var(--primary-soft);
+  --bn-colors-hovered-text: var(--text-primary);
+  --bn-colors-selected-background: var(--primary);
+  --bn-colors-selected-text: var(--foreground);
+  --bn-colors-border: var(--border);
+  --bn-colors-shadow: var(--border);
+  --bn-colors-side-menu: var(--border);
+  --bn-font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --bn-border-radius: var(--radius-md);
+  background: transparent !important;
+}
+
+.blog-post-content .bn-editor {
+  background: transparent !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+.blog-post-content .bn-block-content {
+  color: var(--text-secondary);
+}
+
+/* Block spacing – breathing room between sections */
+.blog-post-content .bn-block-outer {
+  margin-bottom: 1.25rem;
+}
+
+.blog-post-content .bn-block-outer:last-child {
+  margin-bottom: 0;
+}
+
+/* Headings – hierarchy and spacing */
+.blog-post-content h1,
+.blog-post-content h2,
+.blog-post-content h3,
+.blog-post-content h4 {
+  color: var(--blog-heading-color);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-post-content h1:first-child,
+.blog-post-content h2:first-child,
+.blog-post-content h3:first-child,
+.blog-post-content h4:first-child {
+  margin-top: 0;
+}
+
+.blog-post-content h1 { font-size: 1.875rem; }
+.blog-post-content h2 { font-size: 1.5rem; border-bottom: 1px solid var(--blog-border); padding-bottom: 0.375rem; scroll-margin-top: 5rem; }
+.blog-post-content h3 { font-size: 1.25rem; scroll-margin-top: 5rem; }
+.blog-post-content h4 { font-size: 1.125rem; scroll-margin-top: 5rem; }
+
+/* Paragraphs and inline content */
+.blog-post-content .bn-block-content {
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-content p {
+  margin-bottom: 1.25rem;
+  color: var(--blog-body-color);
+}
+
+.blog-post-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Lists */
+.blog-post-content ul,
+.blog-post-content ol {
+  margin: 1rem 0 1.25rem 1.25rem;
+  padding-left: 1rem;
+  color: var(--blog-body-color);
+}
+
+.blog-post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-content li::marker {
+  color: var(--primary);
+}
+
+/* Blockquotes */
+.blog-post-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--primary);
+  background: var(--primary-soft);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--blog-body-color);
+  font-style: italic;
+}
+
+/* Tables – professional styling */
+.blog-post-content table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--blog-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+.blog-post-content thead {
+  background: var(--glass-bg-strong);
+}
+
+.blog-post-content th {
+  padding: 0.875rem 1.25rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--blog-heading-color);
+  border-bottom: 2px solid var(--blog-border);
+}
+
+.blog-post-content td {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--blog-border);
+  color: var(--blog-body-color);
+  font-size: 0.9375rem;
+}
+
+.blog-post-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.blog-post-content tbody tr:hover {
+  background: var(--primary-soft);
+}
+
+/* Inline code (not inside pre) */
+.blog-post-content :not(pre) > code {
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  background: var(--primary-soft);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--blog-border);
+}
+
+/* Hide BlockNote code block language bar in read-only blog view (single, clean code block) */
+.blog-post-content .bn-block-content[data-content-type="codeBlock"] > div:first-child:has(select) {
+  display: none !important;
+}
+.blog-post-content .bn-block-content div:has(select) {
+  display: none !important;
+}
+/* No black/dark background on code block container (BlockNote/Mantine may set it) */
+.blog-post-content .bn-block-content[data-content-type="codeBlock"] {
+  background: transparent !important;
+  padding: 0 !important;
+}
+/* Hide side menu (drag handle) in read-only blog view if it still renders */
+.blog-post-content .bn-side-menu {
+  display: none !important;
+}
+
+/* Code blocks – theme-aware (light/dark) so they match the app */
+.blog-post-content pre {
+  margin: 1.5rem 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--code-border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  background: var(--code-bg) !important;
+  color: var(--code-text) !important;
+}
+.blog-post-content pre code {
+  background: transparent !important;
+  color: var(--code-text) !important;
+}
+.blog-post-content pre .token.comment { color: var(--code-comment); }
+.blog-post-content pre .token.keyword { color: var(--code-keyword); }
+.blog-post-content pre .token.string { color: var(--code-string); }
+.blog-post-content pre .token.number { color: var(--code-number); }
+.blog-post-content pre .token.function { color: var(--code-function); }
+.blog-post-content pre .token.punctuation { color: var(--code-text); }
+.blog-post-content pre .token.operator { color: var(--code-text); }
+.blog-post-content pre .token.property { color: var(--code-keyword); }
+.blog-post-content pre .token.tag { color: var(--code-keyword); }
+.blog-post-content pre .token.attr-name { color: var(--code-function); }
+.blog-post-content pre .token.attr-value { color: var(--code-string); }
+.blog-post-content pre .token.class-name { color: var(--code-function); }
+.blog-post-content pre .token.boolean { color: var(--code-number); }
+.blog-post-content pre .token.regex { color: var(--code-string); }
+.blog-post-content pre .token.variable { color: var(--code-text); }
+.blog-post-content pre .token.constant { color: var(--code-number); }
+.blog-post-content pre .token.selector { color: var(--code-keyword); }
+.blog-post-content pre .token.atrule { color: var(--code-keyword); }
+.blog-post-content pre .token.builtin { color: var(--code-function); }
+.blog-post-content pre .token.important { color: var(--code-string); }
+.blog-post-content pre .token.url { color: var(--code-string); }
+.blog-post-content pre .token.plain { color: var(--code-text); }
+
+/* Copy-button wrapper: layout-only, no extra bar or background */
+.blog-post-content .relative.group\/code {
+  background: transparent !important;
+  border: none !important;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.blog-post-content .bn-block-content img {
+  border-radius: var(--radius-md);
+  max-width: 100%;
+  height: auto;
+  box-shadow: var(--shadow-md);
 }

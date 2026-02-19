@@ -33,3 +33,24 @@ export function blocksToPlainText(blocks: BlogBlock[]): string {
   }
   return parts.filter(Boolean).join('\n');
 }
+
+/**
+ * Transform URLs in block content (e.g. image/file blocks) for display.
+ * Use to convert Drive sharing links to direct view URLs.
+ */
+export function transformContentUrls(
+  blocks: BlogBlock[],
+  transform: (url: string) => string
+): BlogBlock[] {
+  return blocks.map((block) => {
+    const next = { ...block } as BlogBlock;
+    const props = next.props as Record<string, unknown> | undefined;
+    if (props && typeof props.url === 'string') {
+      (next.props as Record<string, unknown>).url = transform(props.url);
+    }
+    if (Array.isArray(next.children) && next.children.length > 0) {
+      next.children = transformContentUrls(next.children as BlogBlock[], transform) as unknown;
+    }
+    return next;
+  });
+}
