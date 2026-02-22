@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -40,6 +41,7 @@ export default function RootLayout({
           <ProgressBar />
           <Navigation />
           <main className="pb-36 md:pb-44">{children}</main>
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
